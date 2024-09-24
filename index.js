@@ -6,6 +6,11 @@ const qrcode = require("qrcode-terminal");
 const client = new Client({
   authStrategy: new LocalAuth(), // This saves session, so you don't need to scan QR every time
 });
+const puppeteerExtra = require("puppeteer-extra");
+const stealthPlugin = require("puppeteer-extra-plugin-stealth");
+const chromium = require("@sparticuz/chromium");
+
+puppeteerExtra.use(stealthPlugin());
 
 // Generate and log the QR code to authenticate the session
 client.on("qr", (qr) => {
@@ -39,9 +44,16 @@ client.initialize();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+app.use(express.json());
 // A basic route
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const browser = await puppeteerExtra.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
+  });
   res.send("Hello, World!");
 });
 
