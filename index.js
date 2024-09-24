@@ -4,10 +4,10 @@ const express = require("express");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const client = new Client({
-  authStrategy: new LocalAuth(), // This saves session, so you don't need to scan QR every time
   puppeteer: {
-    headless: true, // Run in headless mode (no GUI)
-    args: ["--no-sandbox", "--disable-setuid-sandbox"], // Optional arguments to ensure compatibility
+    executablePath: "/usr/bin/google-chrome", // Update this path if needed
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   },
 });
 
